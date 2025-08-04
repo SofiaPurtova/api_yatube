@@ -2,7 +2,7 @@
 
 # Create your views here.
 from rest_framework.exceptions import PermissionDenied
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # from rest_framework.response import Response
 # from rest_framework import status
@@ -22,13 +22,13 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise permissions.PermissionDenied(
+            raise PermissionDenied(
                 'Изменение чужого контента запрещено!'
             ).perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            raise permissions.PermissionDenied(
+            raise PermissionDenied(
                 'Удаление чужого контента запрещено!'
             )
         instance.delete()
@@ -56,14 +56,14 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise permissions.PermissionDenied(
+            raise PermissionDenied(
                 'Изменение чужого комментария запрещено!'
             )
         super().perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            raise permissions.PermissionDenied(
+            raise PermissionDenied(
                 'Удаление чужого комментария запрещено!'
             )
         instance.delete()
