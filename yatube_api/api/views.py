@@ -1,12 +1,13 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import viewsets, permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.response import Response
-from rest_framework import status
+# from rest_framework.response import Response
+# from rest_framework import status
 from django.shortcuts import get_object_or_404
-from posts.models import Post, Group, Comment
+from posts.models import Post, Group
+# from posts.models import Comment
 from .serializers import PostSerializer, GroupSerializer, CommentSerializer
 
 
@@ -20,12 +21,16 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise permissions.PermissionDenied('Изменение чужого контента запрещено!')
+            raise permissions.PermissionDenied(
+                'Изменение чужого контента запрещено!'
+            )
         super().perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            raise permissions.PermissionDenied('Удаление чужого контента запрещено!')
+            raise permissions.PermissionDenied(
+                'Удаление чужого контента запрещено!'
+            )
         instance.delete()
 
 
@@ -50,10 +55,14 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise permissions.PermissionDenied('Изменение чужого комментария запрещено!')
+            raise permissions.PermissionDenied(
+                'Изменение чужого комментария запрещено!'
+            )
         super().perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            raise permissions.PermissionDenied('Удаление чужого комментария запрещено!')
+            raise permissions.PermissionDenied(
+                'Удаление чужого комментария запрещено!'
+            )
         instance.delete()
