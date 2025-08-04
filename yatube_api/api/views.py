@@ -1,6 +1,7 @@
 # from django.shortcuts import render
 
 # Create your views here.
+from rest_framework.exceptions import PermissionDenied
 from rest_framework import viewsets, permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # from rest_framework.response import Response
@@ -23,8 +24,7 @@ class PostViewSet(viewsets.ModelViewSet):
         if serializer.instance.author != self.request.user:
             raise permissions.PermissionDenied(
                 'Изменение чужого контента запрещено!'
-            )
-        super().perform_update(serializer)
+            ).perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
@@ -37,6 +37,7 @@ class PostViewSet(viewsets.ModelViewSet):
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class CommentViewSet(viewsets.ModelViewSet):
